@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Text } from "react-native"
+import { StyleSheet, View, Image, Text, ActivityIndicator } from "react-native"
 import { api } from "../utils/dotenv";
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
@@ -36,16 +36,21 @@ const CharacterDetailScreen = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
             <Header navigation={navigation}/>
+            {!character && (
+                <View style={{flex:1,position:"absolute", width:"100%"}}>
+                    <ActivityIndicator size="large" color="#02afc5" />
+                </View>
+            )}
             {character && (
                 <View style={styles.info}>
                     <Image source={{ uri: character.image }} style={styles.image} />
                     <View style={styles.txt}>
-                        <Text style={styles.infotxt}>Nome: {character.name}</Text>
+                        <Text style={styles.infotxt}>Name: {character.name}</Text>
                         <Text style={styles.infotxt}>Status: {character.status}</Text>
-                        <Text style={styles.infotxt}>Especie: {character.specie}</Text>
-                        <Text style={styles.infotxt}>Gênero: {character.gender}</Text>
-                        <Text style={styles.infotxt}>Origem: {character.origin}</Text>
-                        <Text style={styles.infotxt}>Localização: {character.location}</Text>
+                        <Text style={styles.infotxt}>Specie: {character.specie}</Text>
+                        <Text style={styles.infotxt}>Gender: {character.gender}</Text>
+                        <Text style={styles.infotxt}>Origin: {character.origin}</Text>
+                        <Text style={styles.infotxt}>Location: {character.location}</Text>
                     </View>
                 </View>
             )}

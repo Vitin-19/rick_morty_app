@@ -12,16 +12,15 @@ const CharactersListScreen = ({navigation}) => {
     const [search, setSearch] = useState("")
     const[page, setPage] = useState(1);
     const[isLoading, setIsloading] = useState(false);
-    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(false);
 
-    const handleSearch  = (query) => {
-        setSearch(query);
-    }
 
     const getCharacters = async(currentPage) => {
         if(isLoading) return;
 
         setIsloading(true);
+        setIsInitialLoading(true)
         
         try {
             const response = await api.get(`/?page=${currentPage}`);
@@ -35,21 +34,25 @@ const CharactersListScreen = ({navigation}) => {
             console.error("Erro ao buscar os personagens: ", error);
         }finally{
             setIsloading(false)
+            setIsInitialLoading(false)
         }
     }
 
     const filterCharacters = async () => {
+        setIsInitialLoading(true)
         try {
-            if (search) {
+            if (search.length === 0) {
+                setFilteredCharacters(characters); 
+            } else {
                 const filtered = characters.filter((char) =>
-                    char.name.toLowerCase().includes(search.toLowerCase())
+                char.name.toLowerCase().includes(search.toLowerCase())
                 );
                 setFilteredCharacters(filtered);
-            } else {
-                setFilteredCharacters(characters); 
             }
         } catch (error) {
             console.error("Erro ao filtrar os personagens: ", error);
+        }finally{
+            setIsInitialLoading(false)
         }
     };
 
@@ -69,31 +72,19 @@ const CharactersListScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        const fetchCharacters = async() => {
-            await getCharacters();
-        }
-        fetchCharacters();
-    }, []); 
+        filterCharacters(search);
+    }, [search, characters]);
 
     useEffect(() => {
-        const getSearch = async () => {
-            await filterCharacters();
-        };
-        getSearch();
-    }, [characters]); 
-
-    useEffect(() => {
-        if(search){
-            console.log(search);
-            setFilteredCharacters(characters.forEach((char) => {
-                if(char.includes(search)) setFilteredCharacters(filterCharacters.concat(char))
-            }))
-        }
-    }, [])
+        getCharacters(page);
+    }, []);
 
     return (
         <View style={styles.container}>
-            <Header navigation={navigation} onSearch={handleSearch}/>
+            <Header navigation={navigation} onSearch={(text) => setSearch(text)}/>
+            {isInitialLoading && (
+                <View style={{flex:1,position:"absolute", width:"100%"}}><ActivityIndicator size="large" color="#02afc5" /></View>
+            )}
             <View style={styles.list}>
                 <FlatList
                     data={filteredCharacters}
@@ -119,7 +110,7 @@ const CharactersListScreen = ({navigation}) => {
                     }}
                     onEndReachedThreshold={0.50}
                     ListFooterComponent={
-                        isLoading ? <ActivityIndicator size="large" color="#02afc5" /> : null
+                        isLoading ? <View style={{flex:1,position:"absolute", width:"100%"}}><ActivityIndicator size="large" color="#02afc5" /></View> : null
                     }
                     refreshing={isRefreshing}
                     onRefresh={async() => await refreshList()}

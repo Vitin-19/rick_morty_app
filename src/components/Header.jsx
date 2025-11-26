@@ -11,7 +11,6 @@ const Header = ({ navigation, onSearch }) => {
     const route = useRoute();
 
     const [isSearching, setIsSearching] = useState(false);
-    const [searchedChar, setsearchedChar] = useState("")
 
     const handleSearchChange = () => {
         setsearchedChar(searchedChar);
@@ -41,12 +40,10 @@ const Header = ({ navigation, onSearch }) => {
                 <View style={styles.searchContainer}>
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Buscar Personagem"
-                        placeholderTextColor="#ffffff"
-                        value={searchedChar}
-                        onChangeText={handleSearchChange}
+                        placeholder="Search Character"
+                        placeholderTextColor="#ffffff70"
+                        onChangeText={onSearch}
                     />
-
                 </View>
             )}
         </View>
@@ -117,6 +114,7 @@ const styles = StyleSheet.create({
         borderWidth:1,
         marginHorizontal:10,
         color:"#ffffff",
+        borderRadius:10
     },
 })
 

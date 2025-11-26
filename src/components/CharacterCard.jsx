@@ -11,9 +11,9 @@ const CharacterCard = ({character, navigation}) => {
         }}>
                 <Image source={{uri:character.image}} style={styles.image}/>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.info}>Nome: {character.name}</Text>
+                    <Text style={styles.info}>Name: {character.name}</Text>
                     <Text style={styles.info}>Status: {character.status}</Text>
-                    <Text style={styles.info}>Especie: {character.species}</Text>
+                    <Text style={styles.info}>Specie: {character.species}</Text>
                 </View>
         </TouchableOpacity>
     )
