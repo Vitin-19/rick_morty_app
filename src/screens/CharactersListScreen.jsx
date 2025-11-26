@@ -4,15 +4,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../utils/dotenv.js";
 import Header from "../components/Header.jsx";
 import CharacterCard from "../components/CharacterCard.jsx";
-// import { ActivityIndicator } from "react-native/types_generated/index";
 
 
 const CharactersListScreen = ({navigation}) => {
     const [characters, setCharacters] = useState([]);
     const [filteredCharacters, setFilteredCharacters] = useState([]);
+    const [search, setSearch] = useState("")
     const[page, setPage] = useState(1);
     const[isLoading, setIsloading] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false)
+
+    const handleSearch  = (query) => {
+        setSearch(query);
+    }
 
     const getCharacters = async(currentPage) => {
         if(isLoading) return;
@@ -36,10 +40,9 @@ const CharactersListScreen = ({navigation}) => {
 
     const filterCharacters = async () => {
         try {
-            const searchTerm = await AsyncStorage.getItem("searchTerm");
-            if (searchTerm) {
+            if (search) {
                 const filtered = characters.filter((char) =>
-                    char.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    char.name.toLowerCase().includes(search.toLowerCase())
                 );
                 setFilteredCharacters(filtered);
             } else {
@@ -57,6 +60,7 @@ const CharactersListScreen = ({navigation}) => {
             const response = await api.get(`/?page=1`);
             setCharacters(response.data.results); 
             console.log("Personagens buscados e registrados com sucesso");
+            setPage(1)
         } catch (error) {
             console.error("Erro ao buscar os personagens: ", error);
         } finally{
@@ -78,9 +82,18 @@ const CharactersListScreen = ({navigation}) => {
         getSearch();
     }, [characters]); 
 
+    useEffect(() => {
+        if(search){
+            console.log(search);
+            setFilteredCharacters(characters.forEach((char) => {
+                if(char.includes(search)) setFilteredCharacters(filterCharacters.concat(char))
+            }))
+        }
+    }, [])
+
     return (
         <View style={styles.container}>
-            <Header/>
+            <Header navigation={navigation} onSearch={handleSearch}/>
             <View style={styles.list}>
                 <FlatList
                     data={filteredCharacters}
@@ -91,9 +104,12 @@ const CharactersListScreen = ({navigation}) => {
                         try {
                             console.log("final")
                             if(!isLoading) {
-                                const nextPage = page + 1;
-                                setPage()
-                                await getCharacters(nextPage);
+                                setPage((prevPage) => {
+                                    const nextPage = prevPage + 1;
+                                    console.log(page,"\n", nextPage)
+                                    getCharacters(nextPage);
+                                    return nextPage         
+                                });
                             }
                         } catch (error) {
                             console.error("error: ", error)

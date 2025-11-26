@@ -7,20 +7,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const iconColor = "#02afc5";
 const background_color = "#10504eff";
 
-const Header = ({ navigation }) => {
+const Header = ({ navigation, onSearch }) => {
     const route = useRoute();
 
     const [isSearching, setIsSearching] = useState(false);
     const [searchedChar, setsearchedChar] = useState("")
 
+    const handleSearchChange = () => {
+        setsearchedChar(searchedChar);
+        onSearch(searchedChar)
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.icons}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+                    <TouchableOpacity onPress={() => {
+                        if(route.name === "Details") navigation.goBack()
+                    }} style={styles.backContainer}>
                         <Text style={{ color: iconColor, fontSize: 40 }}>{"<"}</Text>
                     </TouchableOpacity>
-                    {route.name == "List" && (
+                    {route.name === "List" && (
                         <TouchableOpacity onPress={() => setIsSearching(!isSearching)} style={styles.searchIconContainerr}>
                             <Search color={iconColor} size={25} />
                         </TouchableOpacity>
@@ -37,10 +44,7 @@ const Header = ({ navigation }) => {
                         placeholder="Buscar Personagem"
                         placeholderTextColor="#ffffff"
                         value={searchedChar}
-                        onChangeText={async(text) => {
-                            setsearchedChar(text)
-                            await AsyncStorage.setItem("searchTerm",text)
-                        }}
+                        onChangeText={handleSearchChange}
                     />
 
                 </View>
