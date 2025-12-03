@@ -73,16 +73,27 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
         borderRadius: 10,
+        boxShadow:'0px 2px 8px rgba(0, 0, 0, 0.15)'
     },
     txt: {
         flex:1,
         flexDirection:"column",
-        marginTop:20,
-        marginHorizontal:50
+        marginVertical:20,
+        marginHorizontal:50,
+        paddingTop:10,
+        backgroundColor: "#1d9593",
+        opacity: 0.9,
+        width:300,
+        height:50,
+        borderRadius:10,
+        marginBottom:40,
+        boxShadow:'0px 2px 8px rgba(0, 0, 0, 0.15)'
     },
     infotxt:{
         color:"#ffffff",
-        fontSize: 23, 
+        fontSize: 22,
+        marginBottom: 10,
+        marginHorizontal:10,
     }
 })
 

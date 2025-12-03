@@ -2,7 +2,6 @@ import { View, StyleSheet, Text, Image, TouchableOpacity, TextInput } from "reac
 import { Search } from "lucide-react-native";
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const iconColor = "#02afc5";
 const background_color = "#10504eff";

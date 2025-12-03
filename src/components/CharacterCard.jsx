@@ -1,4 +1,3 @@
-import { useRoute } from "@react-navigation/native";
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 const background_color = "#10504eff";
