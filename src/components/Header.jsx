@@ -12,20 +12,17 @@ const Header = ({ navigation, onSearch }) => {
 
     const [isSearching, setIsSearching] = useState(false);
 
-    const handleSearchChange = () => {
-        setsearchedChar(searchedChar);
-        onSearch(searchedChar)
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.icons}>
-                    <TouchableOpacity onPress={() => {
-                        if(route.name === "Details") navigation.goBack()
-                    }} style={styles.backContainer}>
-                        <Text style={{ color: iconColor, fontSize: 40 }}>{"<"}</Text>
-                    </TouchableOpacity>
+                    {route.name == "Details" && (
+                        <TouchableOpacity onPress={() => {
+                            if(route.name === "Details") navigation.goBack()
+                        }} style={styles.backContainer}>
+                            <Text style={{ color: iconColor, fontSize: 40 }}>{"<"}</Text>
+                        </TouchableOpacity>
+                    )}
                     {route.name === "List" && (
                         <TouchableOpacity onPress={() => setIsSearching(!isSearching)} style={styles.searchIconContainerr}>
                             <Search color={iconColor} size={25} />
